@@ -205,7 +205,18 @@ class CLI:
         )
 
         return self
+    
+    def negative_prompt(self):
+        self.parser.add_argument(
+            '--negative_prompt',
+            type=str,
+            nargs="?",
+            help='The negative prompt',
+            default=""
+        )
 
+        return self
+    
     def orig_img(self, check_exists: Union[bool, Callable]=True, required: bool=True):
         self.parser.add_argument(
             "--orig_img",

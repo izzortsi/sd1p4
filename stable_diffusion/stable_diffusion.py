@@ -172,11 +172,11 @@ class StableDiffusion:
         return t_index
 
     def get_text_conditioning(
-        self, uncond_scale: float, prompts: list, batch_size: int = 1
+        self, uncond_scale: float, prompts: list, uncond_prompt: str = "", batch_size: int = 1
     ):
         # In unconditional scaling is not $1$ get the embeddings for empty prompts (no conditioning).
         if uncond_scale != 1.0:
-            un_cond = self.model.get_text_conditioning(batch_size * [""])
+            un_cond = self.model.get_text_conditioning(batch_size * [uncond_prompt])
         else:
             un_cond = None
 
@@ -281,6 +281,7 @@ class StableDiffusion:
         seed: int = 0,
         batch_size: int = 1,
         prompt: str,
+        negative_prompt: str = "",
         h: int = 512,
         w: int = 512,
         uncond_scale: float = 7.5,
@@ -316,7 +317,7 @@ class StableDiffusion:
         with autocast:
             # with section("getting text cond"):
             un_cond, cond = self.get_text_conditioning(
-                uncond_scale, prompts, batch_size
+                uncond_scale, prompts, negative_prompt, batch_size
             )
             # [Sample in the latent space](../sampler/index.html).
             # `x` will be of shape `[batch_size, c, h / f, w / f]`
